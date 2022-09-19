@@ -36,51 +36,59 @@ class WeiboMsgListPage extends StatefulWidget {
 }
 
 class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
-  int itemCount = 1;
+  int itemCount = 40;
+  ScrollController scrollController = ScrollController();
   var dataList = [];
 
   @override
   void initState() {
     super.initState();
-    getData();
+    scrollController.addListener(() {
+      if(scrollController.position.pixels>scrollController.position.maxScrollExtent-40){
+        getData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
         child: ListView.builder(
+          controller: scrollController,
           itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.all(5),
-              child: Text(dataList[index].keyword),
+            Widget tip = Text("");
+            if(index == itemCount-1){
+              tip = showWait();
+            }
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Text("${index}"),
+                ),
+                tip
+              ],
             );
           },
-          itemCount: dataList.length,
+          itemCount: itemCount,
         ),
         onRefresh: () async {
-          getData();
+          itemCount=40;
         });
   }
 
   void getData() async {
-    var url = "http://coderutil.com/api/resou/v1/weibo?size=10";
-    try{
-      var result = await Dio().get(url);
-      if (jsonDecode(result.data)["code"] == 200) {
-        var list = json.decode(result.data)["data"];
-        setState(() {
-          dataList.addAll(list);
-        });
-      } else {}
-    }catch(e){
-      print(e.toString());
-    }
+    await Future.delayed(Duration(milliseconds: 2000),(){
+      setState(() {
+        itemCount+=5;
+      });
+    });
   }
-}
-
-class HotData {
-  int rank = 0;
-  String keyword = "";
-  String url = "";
-  int hotValue = 0;
+  Widget showWait(){
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.yellow,
+      )
+    );
+  }
 }

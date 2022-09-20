@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hot_list/hot_item.dart';
@@ -88,6 +85,7 @@ class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
         });
   }
 
+  //获取数据
   void getData() async {
     String url = "https://api.bilibili.com/x/web-interface/popular";
     var request = await Dio().get(url, queryParameters: {"ps": ps, "pn": pn});
@@ -102,6 +100,7 @@ class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
     }
   }
 
+  //展示等待加载
   Widget showWait() {
     return const Center(
         child: CircularProgressIndicator(

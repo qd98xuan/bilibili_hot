@@ -3,7 +3,14 @@ import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hot_list/hot_item.dart';
 
+/**
+* @author huangxuan
+* @since 2022/9/20 17:04
+* QQ: 1360643904
+* 热搜列表
+*/
 void main() {
   runApp(const MyApp());
 }
@@ -36,15 +43,24 @@ class WeiboMsgListPage extends StatefulWidget {
 }
 
 class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
-  int itemCount = 40;
   ScrollController scrollController = ScrollController();
   var dataList = [];
+
+  //页数
+  int pn = 1;
+  int ps = 20;
+
+  //是否还有数据
+  bool hasData = true;
 
   @override
   void initState() {
     super.initState();
+    getData();
     scrollController.addListener(() {
-      if(scrollController.position.pixels>scrollController.position.maxScrollExtent-40){
+      if (scrollController.position.pixels >
+          scrollController.position.maxScrollExtent - 40) {
+        pn++;
         getData();
       }
     });
@@ -56,39 +72,40 @@ class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
         child: ListView.builder(
           controller: scrollController,
           itemBuilder: (BuildContext context, int index) {
-            Widget tip = Text("");
-            if(index == itemCount-1){
+            Widget tip = const Text("");
+            if (index == dataList.length - 1) {
               tip = showWait();
             }
-            return Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text("${index}"),
-                ),
-                tip
-              ],
-            );
+            //每一项的Item
+            return generateItem(tip, dataList, index);
           },
-          itemCount: itemCount,
+          itemCount: dataList.length,
         ),
         onRefresh: () async {
-          itemCount=40;
+          pn = 1;
+          dataList.clear();
+          getData();
         });
   }
 
   void getData() async {
-    await Future.delayed(Duration(milliseconds: 2000),(){
+    String url = "https://api.bilibili.com/x/web-interface/popular";
+    var request = await Dio().get(url, queryParameters: {"ps": ps, "pn": pn});
+    var data = request.data;
+    print(data);
+    if (data["code"] == 0) {
       setState(() {
-        itemCount+=5;
+        dataList.addAll(data["data"]["list"]);
       });
-    });
+    } else {
+      print("请求失败：${data["message"]}");
+    }
   }
-  Widget showWait(){
+
+  Widget showWait() {
     return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.yellow,
-      )
-    );
+        child: CircularProgressIndicator(
+      color: Colors.yellow,
+    ));
   }
 }

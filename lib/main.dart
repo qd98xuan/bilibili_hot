@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hot_list/hot_item.dart';
 
 /**
-* @author huangxuan
-* @since 2022/9/20 17:04
-* QQ: 1360643904
-* 热搜列表
-*/
+ * @author huangxuan
+ * @since 2022/9/20 17:04
+ * QQ: 1360643904
+ * 热搜列表
+ */
 void main() {
   runApp(const MyApp());
 }
@@ -74,7 +74,7 @@ class _WeiboMsgListPageState extends State<WeiboMsgListPage> {
               tip = showWait();
             }
             //每一项的Item
-            return generateItem(tip, dataList, index);
+            return generateItem(tip, dataList, index, context);
           },
           itemCount: dataList.length,
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hot_list/hot_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /**
  * @author huangxuan
@@ -76,11 +77,12 @@ Widget generateItem(
               ),
             ],
           ),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => HotInfoWidget(
-                    title: dataList[index]["title"],
-                    url: dataList[index]["short_link"])));
+          onTap: () async {
+            String url = dataList[index]["short_link"];
+            Uri uri = Uri.parse(url);
+            if(await canLaunchUrl(uri)){
+              await launchUrl(uri);
+            }
           },
         ),
         tip

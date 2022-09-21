@@ -1,13 +1,3 @@
-This project is a starting point for a Flutter application.
+# 哔哩哔哩热搜榜
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# weibo_hot_list
-微博热搜
+功能简单，只有热搜列表的下拉刷新和上拉加载功能，点击可以跳转链接
